@@ -6,6 +6,7 @@ on:
 jobs:
     ci:
         runs-on: ubuntu-latest
+        environment: preprod
 
         steps:
             - name: Checkout code
@@ -24,10 +25,17 @@ jobs:
             - name: Install dependencies
               run: npm install
 
+            - name: "install vercel cli"
+              run: npm install -g vercel
+
             - name: "list all directories"
               run: ls 
 
             - name: Build
               run: npm run build
+
+            - name: Deploy to Vercel
+              run: vercel --prod --token ${{ secrets.TEMP_TOKEN }} --yes --name=auth-frontend
+
 
             
