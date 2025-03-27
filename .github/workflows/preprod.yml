@@ -1,51 +1,33 @@
-name: "CI CD Pipeline for Auth Frontend Preprod"
+name: "ci-cd pipeline for auth frontend preprod"
 
 on:
     workflow_dispatch:
 
 jobs:
-    cicd:
+    ci:
         runs-on: ubuntu-latest
-        environment: preprod
 
         steps:
-            - name: "Setup Node JS"
-              uses: actions/setup-node@v4 
-              with:
-                node-version: '21'
-
-            - name: "Check node installation"
-              run: |
-                node --version
-                npm --version
-
             - name: Checkout code
               uses: actions/checkout@v2
 
-            - name: "Install dependencies"
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "21"
+            
+            - name: "check node installation"
+              run: |
+               node --version
+                npm --version
+
+            - name: Install dependencies
               run: npm install
 
-            - name: "Install vercel cli"
-              run: npm install -g vercel
+            - name: "list all directories"
+              run: ls 
 
-            - name: "List directory"
-              run: |
-                ls
-                echo ${{ vars.VITE_APP_KEY }}
-            
-            - name: "Run ES Lint"
-              run: npm run lint
-
-            - name: "Create project Build"
-              run: |
-                echo VITE_APP_KEY=$VITE_APP_KEY >> .env
-                echo VITE_JS_KEY=$VITE_JS_KEY >> .env
-                npm run build
-              env:
-                VITE_APP_KEY: ${{ vars.VITE_APP_KEY }}
-                VITE_JS_KEY: ${{ vars.VITE_JS_KEY }}
-
-            - name: "Deploy to Vercel"
-              run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --confirm --name=auth_preprod
+            - name: Build
+              run: npm run build
 
             
